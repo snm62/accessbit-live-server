@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}Fake News Detection - Predict{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Input Section -->
+        <div class="col-md-6">
+            <div class="card prediction-card">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="fas fa-edit"></i> Enter News Text</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="prediction-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="news-text" class="form-label">News Article:</label>
+                            <textarea 
+                                name="nws" 
+                                id="news-text"
+                                class="form-control" 
+                                rows="12" 
+                                placeholder="Paste your news article here..."
+                                required></textarea>
+                        </div>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-search"></i> Analyze News
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="col-md-6">
+            {% if prediction %}
+            <div class="card prediction-card">
+                <div class="card-header bg-dark text-white">
+                    <h4><i class="fas fa-chart-bar"></i> Analysis Results</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Prediction -->
+                    <div class="text-center mb-4">
+                        {% if prediction == 'FAKE' %}
+                            <div class="alert alert-danger">
+                                <h2><i class="fas fa-times-circle"></i> FAKE NEWS</h2>
+                                <p class="mb-0">This article appears to be fake news</p>
+                            </div>
+                        {% elif prediction == 'REAL' %}
+                            <div class="alert alert-success">
+                                <h2><i class="fas fa-check-circle"></i> REAL NEWS</h2>
+                                <p class="mb-0">This article appears to be real news</p>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                <h2><i class="fas fa-question-circle"></i> UNCERTAIN</h2>
+                                <p class="mb-0">Unable to determine with confidence</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Confidence Score -->
+                    <div class="mb-4">
+                        <h5>Confidence: {{ confidence|floatformat:1 }}%</h5>
+                        <div class="progress confidence-bar">
+                            <div class="progress-bar {% if prediction == 'FAKE' %}bg-danger{% else %}bg-success{% endif %}" 
+                                 data-width="{{ confidence|default:0 }}"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Probability -->
+                    <div class="mb-4">
+                        <h6>Model Probability: {{ probability|floatformat:3 }}</h6>
+                        <small class="text-muted">Raw LSTM model output (0 = Fake, 1 = Real)</small>
+                    </div>
+                    
+                    <!-- Explanation -->
+                    {% if explanation %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-info-circle"></i> Analysis Details:</h5>
+                        <div class="explanation-list">
+                            {% for exp in explanation %}
+                                <div class="explanation-item">
+                                    <i class="fas fa-arrow-right text-primary"></i> {{ exp }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Features -->
+                    {% if features %}
+                    <div class="mb-4">
+                        <h5><i class="fas fa-chart-pie"></i> Text Analysis:</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Word Count:</small><br>
+                                <strong>{{ features.word_count }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Sentences:</small><br>
+                                <strong>{{ features.sentence_count }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Vocabulary Size:</small><br>
+                                <strong>{{ features.vocabulary_size }}</strong>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Avg Word Length:</small><br>
+                                <strong>{{ features.avg_word_length|floatformat:1 }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Rating Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card prediction-card">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="fas fa-star"></i> Rate This Analysis</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form method="post" action="/addrating/">
+                                {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    <label for="user-name" class="form-label">Your Name:</label>
+                                    <input type="text" name="nme" id="user-name" class="form-control" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="user-comment" class="form-label">Comment:</label>
+                                    <textarea name="cmnt" id="user-comment" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="user-rating" class="form-label">Rating:</label>
+                                    <select name="rt" id="user-rating" class="form-control">
+                                        <option value="5">Excellent</option>
+                                        <option value="4">Good</option>
+                                        <option value="3">Average</option>
+                                        <option value="2">Bad</option>
+                                        <option value="1">Very Bad</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Submit Rating
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-comments"></i> Recent Ratings:</h5>
+                            {% if data %}
+                                <div class="rating-list" style="max-height: 300px; overflow-y: auto;">
+                                    {% for rating in data %}
+                                    <div class="card mb-2">
+                                        <div class="card-body p-3">
+                                            <div class="d-flex justify-content-between">
+                                                <strong>{{ rating.1 }}</strong>
+                                                <span class="badge bg-warning text-dark">{{ rating.3 }}/5</span>
+                                            </div>
+                                            <p class="mb-1">{{ rating.2 }}</p>
+                                            <small class="text-muted">{{ rating.4 }}</small>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted">No ratings yet. Be the first!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5 class="mt-3">Analyzing News...</h5>
+                <p class="text-muted">Our LSTM model is processing your text</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#prediction-form').on('submit', function() {
+        // Show loading modal
+        $('#loadingModal').modal('show');
+        
+        // Hide modal after 2 seconds (simulate processing)
+        setTimeout(function() {
+            $('#loadingModal').modal('hide');
+        }, 2000);
+    });
+    
+    // Set confidence bar width
+    $('.progress-bar[data-width]').each(function() {
+        var width = $(this).data('width');
+        $(this).css('width', width + '%');
+    });
+});
+</script>
+{% endblock %}

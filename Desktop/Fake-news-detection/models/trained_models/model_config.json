@@ -1,0 +1,7 @@
+{
+    "max_length": 500,
+    "vocab_size": 8000,
+    "embedding_dim": 128,
+    "model_path": "models/trained_models/lstm_model.h5",
+    "tokenizer_path": "models/trained_models/lstm_tokenizer.pkl"
+}

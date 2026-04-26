@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Fake News Detection System - Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Hero Section -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-4">
+                <span class="fake-letter">F</span><span class="news-letter">A</span><span class="detection-letter">K</span><span class="system-letter">E</span>
+                <span class="text-dark">News Detection System</span>
+            </h1>
+            <p class="lead mb-5">Advanced LSTM-based deep learning system to detect fake news articles with high accuracy</p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 prediction-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">LSTM Deep Learning</h5>
+                    <p class="card-text">Powered by advanced Long Short-Term Memory neural networks for accurate text analysis and pattern recognition.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 prediction-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Real-time Analysis</h5>
+                    <p class="card-text">Instant analysis of news articles with confidence scoring and detailed explanations of predictions.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card h-100 prediction-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">High Accuracy</h5>
+                    <p class="card-text">Achieves over 90% accuracy in detecting fake news through sophisticated machine learning algorithms.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">How It Works</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h5><i class="fas fa-edit text-primary"></i> Text Input</h5>
+                        <p>Simply paste any news article text into our detection system. The LSTM model will analyze the content for patterns and linguistic features.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h5><i class="fas fa-cogs text-warning"></i> LSTM Processing</h5>
+                        <p>Our advanced LSTM neural network processes the text through multiple layers, learning sequential patterns and context.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h5><i class="fas fa-chart-bar text-success"></i> Analysis Results</h5>
+                        <p>Get instant results with confidence scores, probability estimates, and detailed explanations of why the prediction was made.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card">
+                        <h5><i class="fas fa-shield-alt text-danger"></i> Fake News Detection</h5>
+                        <p>Identify fake news articles with high precision, helping combat misinformation in the digital age.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Technology Stack</h2>
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <i class="fab fa-python fa-2x text-primary mb-2"></i>
+                        <h6>Python</h6>
+                        <small>Core programming language</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <i class="fas fa-brain fa-2x text-warning mb-2"></i>
+                        <h6>TensorFlow</h6>
+                        <small>Deep learning framework</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <i class="fas fa-network-wired fa-2x text-success mb-2"></i>
+                        <h6>LSTM Networks</h6>
+                        <small>Neural network architecture</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="feature-card">
+                        <i class="fab fa-html5 fa-2x text-danger mb-2"></i>
+                        <h6>Django</h6>
+                        <small>Web framework</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="card prediction-card">
+                <div class="card-body">
+                    <h3 class="mb-4">Ready to Detect Fake News?</h3>
+                    <p class="mb-4">Test our LSTM-based fake news detection system with any news article.</p>
+                    <a href="/predict/" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search"></i> Start Detection
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

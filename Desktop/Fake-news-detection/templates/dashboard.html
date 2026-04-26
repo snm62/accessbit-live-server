@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Fake News Detection{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">📊 Fake News Detection Dashboard</h1>
+    
+    {% if error %}
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    {% else %}
+    
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Analyses</h5>
+                    <h2 class="card-text">{{ total_analyses }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">Fake News Detected</h5>
+                    <h2 class="card-text">{{ fake_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Real News Detected</h5>
+                    <h2 class="card-text">{{ real_count }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Feedback Accuracy</h5>
+                    <h2 class="card-text">{{ feedback_accuracy|floatformat:1 }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>User Feedback Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Feedback:</strong> {{ total_feedback }}</p>
+                    <p><strong>Correct Predictions:</strong> {{ correct_feedback }}</p>
+                    <p><strong>Incorrect Predictions:</strong> {{ incorrect_feedback }}</p>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" style="width: {% if total_feedback > 0 %}{{ feedback_accuracy }}{% else %}0{% endif %}%">
+                            Correct
+                        </div>
+                        <div class="progress-bar bg-danger" style="width: {% if total_feedback > 0 %}{{ incorrect_feedback_percentage }}{% else %}0{% endif %}%">
+                            Incorrect
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>System Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Database:</strong> SQLite (Enhanced with IP tracking)</p>
+                    <p><strong>Models:</strong> Rating, NewsAnalysis, UserFeedback, SystemMetrics</p>
+                    <p><strong>Features:</strong> IP tracking, User agent logging, Processing time</p>
+                    <p><strong>Admin Panel:</strong> <a href="/admin" target="_blank">Access Admin</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Analyses -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Recent News Analyses</h5>
+        </div>
+        <div class="card-body">
+            {% if recent_analyses %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Text Preview</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                            <th>IP Address</th>
+                            <th>Processing Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for analysis in recent_analyses %}
+                        <tr>
+                            <td>{{ analysis.created_at|date:"M d, Y H:i" }}</td>
+                            <td>{{ analysis.text|truncatechars:50 }}</td>
+                            <td>
+                                {% if analysis.prediction == 'FAKE' %}
+                                <span class="badge bg-danger">FAKE</span>
+                                {% else %}
+                                <span class="badge bg-success">REAL</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ analysis.confidence|floatformat:1 }}%</td>
+                            <td>{{ analysis.ip_address|default:"N/A" }}</td>
+                            <td>{{ analysis.processing_time|floatformat:3 }}s</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No analyses found. Start using the fake news detection to see data here!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="/predict" class="btn btn-primary btn-lg btn-block mb-2">
+                        🔍 Analyze News
+                    </a>
+                    <a href="/admin" class="btn btn-secondary btn-lg btn-block mb-2">
+                        ⚙️ Admin Panel
+                    </a>
+                    <a href="/" class="btn btn-info btn-lg btn-block">
+                        🏠 Home Page
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Database Features</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">✅ IP Address Tracking</li>
+                        <li class="list-group-item">✅ User Agent Logging</li>
+                        <li class="list-group-item">✅ Processing Time Measurement</li>
+                        <li class="list-group-item">✅ User Feedback System</li>
+                        <li class="list-group-item">✅ Session Tracking</li>
+                        <li class="list-group-item">✅ Model Version Tracking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
+
+<style>
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-weight: bold;
+}
+
+.progress {
+    height: 25px;
+}
+
+.progress-bar {
+    line-height: 25px;
+    font-size: 12px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+}
+
+.badge {
+    font-size: 0.8em;
+}
+
+.btn-block {
+    width: 100%;
+}
+</style>
+{% endblock %}

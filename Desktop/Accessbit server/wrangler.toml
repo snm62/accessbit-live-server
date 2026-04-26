@@ -1,0 +1,30 @@
+# wrangler.toml (wrangler v3.88.0^)
+name = "accessibility-widget"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Observability settings
+[observability.logs]
+enabled = true
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "ACCESSIBILITY_AUTH"
+id = "3057b02d5ea04319b997877bdd1cfba5"
+preview_id = "3057b02d5ea04319b997877bdd1cfba5"
+
+[[kv_namespaces]]
+binding = "ACCESSBIT_PAID"
+id = "7fdfe82ac6dc455883846285dab80d50"
+preview_id = ""
+
+# Environment variables are set as secrets via wrangler secret put
+
+# Routes (if you have custom domains)
+routes = [
+   { pattern = "app.accessbit.io/*", zone_name = "app.accessbit.io" }
+ ]
+
+# Daily cron: 2 AM UTC
+[triggers]
+crons = ["0 2 * * *"]
